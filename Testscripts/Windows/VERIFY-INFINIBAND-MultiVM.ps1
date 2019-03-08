@@ -168,9 +168,6 @@ function Main {
         Write-LogInfo "Rebooting All VMs!"
         $TestProvider.RestartAllDeployments($AllVMData)
 
-        # In some cases, IB will not be initialized after reboot
-        Resolve-UninitializedIB
-
         $TotalSuccessCount = 0
         $Iteration = 0
         do {
@@ -218,6 +215,10 @@ function Main {
                     -password $password -command "cat /$superUser/state.txt"
                     Write-LogInfo "$FinalStatus"
                     Wait-Time -seconds 10
+                    if ($FinalStatus -ne "TestRunning") {
+						Write-LogInfo "TestRDMA_MultiVM.sh finished the run!"
+						break
+					}
                 }
 
                 $temp=(Get-Job -Id $TestJob).State
@@ -390,8 +391,6 @@ function Main {
             if ($RemainingRebootIterations -gt 0) {
                 if ($testResult -eq "PASS") {
                     $TestProvider.RestartAllDeployments($AllVMData)
-                    # In some cases, IB will not be initialized after reboot
-                    Resolve-UninitializedIB
                     $RemainingRebootIterations -= 1
                 } else {
                     Write-LogErr "Stopping the test due to failures."

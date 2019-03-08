@@ -22,6 +22,13 @@
             <param>nbc_ppn=INFINIBAND_INTEL_PPN</param>
             <param>imb_nbc_tests_iterations=INFINIBAND_INTEL_NBC_TEST_COUNT</param>
             <param>mpi_type="intel"</param>
+            <param>mlx_ofed75_rhel75=MLX_OFED45_RHEL75</param>
+			<param>ibm_platform_mpi=IBM_PLATFORM_MPI_DOWNLOAD</param>
+			<param>intel_mpi=INTEL_MPI_DOWNLOAD</param>
+			<param>open_mpi=OPEN_MPI_DOWNLOAD</param>
+			<param>mvapich_mpi=MVAPICH_MPI_DOWNLOAD</param>
+			<param>intel_mpi_benchmark=INTEL_MPI_BENCHMARK_DOWNLOAD</param>
+			<param>walaagent_repo=WALAAgent_REPO</param>
         </TestParameters>
         <Platform>Azure</Platform>
         <Category>Functional</Category>
@@ -50,6 +57,13 @@
             <param>nbc_ppn=INFINIBAND_INTEL_PPN</param>
             <param>imb_nbc_tests_iterations=INFINIBAND_INTEL_NBC_TEST_COUNT</param>
             <param>mpi_type="intel"</param>
+            <param>mlx_ofed75_rhel75=MLX_OFED45_RHEL75</param>
+			<param>ibm_platform_mpi=IBM_PLATFORM_MPI_DOWNLOAD</param>
+			<param>intel_mpi=INTEL_MPI_DOWNLOAD</param>
+			<param>open_mpi=OPEN_MPI_DOWNLOAD</param>
+			<param>mvapich_mpi=MVAPICH_MPI_DOWNLOAD</param>
+			<param>intel_mpi_benchmark=INTEL_MPI_BENCHMARK_DOWNLOAD</param>
+			<param>walaagent_repo=WALAAgent_REPO</param>
         </TestParameters>
         <Platform>Azure</Platform>
         <Category>Functional</Category>
@@ -79,6 +93,13 @@
             <param>nbc_ppn=INFINIBAND_OPEN_PPN</param>
             <param>imb_nbc_tests_iterations=INFINIBAND_OPEN_NBC_TEST_COUNT</param>
             <param>mpi_type="open"</param>
+            <param>mlx_ofed75_rhel75=MLX_OFED45_RHEL75</param>
+			<param>ibm_platform_mpi=IBM_PLATFORM_MPI_DOWNLOAD</param>
+			<param>intel_mpi=INTEL_MPI_DOWNLOAD</param>
+			<param>open_mpi=OPEN_MPI_DOWNLOAD</param>
+			<param>mvapich_mpi=MVAPICH_MPI_DOWNLOAD</param>
+			<param>intel_mpi_benchmark=INTEL_MPI_BENCHMARK_DOWNLOAD</param>
+			<param>walaagent_repo=WALAAgent_REPO</param>
         </TestParameters>
         <Platform>Azure</Platform>
         <Category>Functional</Category>
@@ -107,6 +128,13 @@
             <param>nbc_ppn=INFINIBAND_OPEN_PPN</param>
             <param>imb_nbc_tests_iterations=INFINIBAND_OPEN_NBC_TEST_COUNT</param>
             <param>mpi_type="open"</param>
+            <param>mlx_ofed75_rhel75=MLX_OFED45_RHEL75</param>
+			<param>ibm_platform_mpi=IBM_PLATFORM_MPI_DOWNLOAD</param>
+			<param>intel_mpi=INTEL_MPI_DOWNLOAD</param>
+			<param>open_mpi=OPEN_MPI_DOWNLOAD</param>
+			<param>mvapich_mpi=MVAPICH_MPI_DOWNLOAD</param>
+			<param>intel_mpi_benchmark=INTEL_MPI_BENCHMARK_DOWNLOAD</param>
+			<param>walaagent_repo=WALAAgent_REPO</param>
         </TestParameters>
         <Platform>Azure</Platform>
         <Category>Functional</Category>
@@ -136,6 +164,13 @@
             <param>nbc_ppn=INFINIBAND_IBM_PPN</param>
             <param>imb_nbc_tests_iterations=INFINIBAND_IBM_NBC_TEST_COUNT</param>
             <param>mpi_type="ibm"</param>
+            <param>mlx_ofed75_rhel75=MLX_OFED45_RHEL75</param>
+			<param>ibm_platform_mpi=IBM_PLATFORM_MPI_DOWNLOAD</param>
+			<param>intel_mpi=INTEL_MPI_DOWNLOAD</param>
+			<param>open_mpi=OPEN_MPI_DOWNLOAD</param>
+			<param>mvapich_mpi=MVAPICH_MPI_DOWNLOAD</param>
+			<param>intel_mpi_benchmark=INTEL_MPI_BENCHMARK_DOWNLOAD</param>
+			<param>walaagent_repo=WALAAgent_REPO</param>
         </TestParameters>
         <Platform>Azure</Platform>
         <Category>Functional</Category>
@@ -164,6 +199,13 @@
             <param>nbc_ppn=INFINIBAND_IBM_PPN</param>
             <param>imb_nbc_tests_iterations=INFINIBAND_IBM_NBC_TEST_COUNT</param>
             <param>mpi_type="ibm"</param>
+            <param>mlx_ofed75_rhel75=MLX_OFED45_RHEL75</param>
+			<param>ibm_platform_mpi=IBM_PLATFORM_MPI_DOWNLOAD</param>
+			<param>intel_mpi=INTEL_MPI_DOWNLOAD</param>
+			<param>open_mpi=OPEN_MPI_DOWNLOAD</param>
+			<param>mvapich_mpi=MVAPICH_MPI_DOWNLOAD</param>
+			<param>intel_mpi_benchmark=INTEL_MPI_BENCHMARK_DOWNLOAD</param>
+			<param>walaagent_repo=WALAAgent_REPO</param>
         </TestParameters>
         <Platform>Azure</Platform>
         <Category>Functional</Category>
@@ -193,6 +235,13 @@
             <param>nbc_ppn=INFINIBAND_MVAPICH_PPN</param>
             <param>imb_nbc_tests_iterations=INFINIBAND_MVAPICH_NBC_TEST_COUNT</param>
             <param>mpi_type="mvapich"</param>
+            <param>mlx_ofed75_rhel75=MLX_OFED45_RHEL75</param>
+			<param>ibm_platform_mpi=IBM_PLATFORM_MPI_DOWNLOAD</param>
+			<param>intel_mpi=INTEL_MPI_DOWNLOAD</param>
+			<param>open_mpi=OPEN_MPI_DOWNLOAD</param>
+			<param>mvapich_mpi=MVAPICH_MPI_DOWNLOAD</param>
+			<param>intel_mpi_benchmark=INTEL_MPI_BENCHMARK_DOWNLOAD</param>
+			<param>walaagent_repo=WALAAgent_REPO</param>
         </TestParameters>
         <Platform>Azure</Platform>
         <Category>Functional</Category>
@@ -221,6 +270,13 @@
             <param>nbc_ppn=INFINIBAND_MVAPICH_PPN</param>
             <param>imb_nbc_tests_iterations=INFINIBAND_MVAPICH_NBC_TEST_COUNT</param>
             <param>mpi_type="mvapich"</param>
+            <param>mlx_ofed75_rhel75=MLX_OFED45_RHEL75</param>
+			<param>ibm_platform_mpi=IBM_PLATFORM_MPI_DOWNLOAD</param>
+			<param>intel_mpi=INTEL_MPI_DOWNLOAD</param>
+			<param>open_mpi=OPEN_MPI_DOWNLOAD</param>
+			<param>mvapich_mpi=MVAPICH_MPI_DOWNLOAD</param>
+			<param>intel_mpi_benchmark=INTEL_MPI_BENCHMARK_DOWNLOAD</param>
+			<param>walaagent_repo=WALAAgent_REPO</param>
         </TestParameters>
         <Platform>Azure</Platform>
         <Category>Functional</Category>

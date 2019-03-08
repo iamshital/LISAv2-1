@@ -52,14 +52,15 @@ function Verify_Result {
 }
 
 function Main() {
-    LogMsg "Starting RDMA required packages and software setup in VM"
+	LogMsg "Starting RDMA required packages and software setup in VM"
+	update_repos
 
     case $DISTRO in
         redhat_7|centos_7)
             # install required packages regardless VM types.
             LogMsg "Starting RHEL/CentOS setup"
             LogMsg "Installing required packages ..."
-            install_package "kernel-devel-3.10.0-862.9.1.el7.x86_64 python-devel valgrind-devel redhat-rpm-config rpm-build gcc-gfortran libdb-devel gcc-c++ glibc-devel zlib-devel numactl-devel libmnl-devel binutils-devel iptables-devel libstdc++-devel libselinux-devel gcc elfutils-devel libtool libnl3-devel git java libstdc++.i686 dapl python-setuptools gtk2 atk cairo tcl tk createrepo libibverbs-devel libibmad-devel byacc.x86_64 kernel-devel-3.10.0-862.11.6.el7.x86_64"
+            Install_package "kernel-devel-3.10.0-862.9.1.el7.x86_64 python-devel valgrind-devel redhat-rpm-config rpm-build gcc-gfortran libdb-devel gcc-c++ glibc-devel zlib-devel numactl-devel libmnl-devel binutils-devel iptables-devel libstdc++-devel libselinux-devel gcc elfutils-devel libtool libnl3-devel git java libstdc++.i686 dapl python-setuptools gtk2 atk cairo tcl tk createrepo libibverbs-devel libibmad-devel byacc.x86_64 kernel-devel-3.10.0-862.11.6.el7.x86_64 zip"
 
             yum -y groupinstall "InfiniBand Support"
             Verify_Result
@@ -74,17 +75,18 @@ function Main() {
             # This is required for new HPC VM HB- and HC- size deployment, Dec/2018
             cd
             LogMsg "Downloading MLX driver"
-            wget http://content.mellanox.com/ofed/MLNX_OFED-4.5-1.0.1.0/MLNX_OFED_LINUX-4.5-1.0.1.0-rhel7.5-x86_64.tgz
+            wget $mlx_ofed75_rhel75
             Verify_Result
-            LogMsg "Downloaded MLNX_OFED_LINUX-4.5-1.0.1.0-rhel7.5-x86_64.tgz"
+            LogMsg "Downloaded MLNX_OFED_LINUX driver, $mlx_ofed75_rhel75"
 
             LogMsg "Opening MLX OFED driver tar ball file"
-            tar zxvf MLNX_OFED_LINUX-4.5-1.0.1.0-rhel7.5-x86_64.tgz
+			file_nm=${mlx_ofed75_rhel75##*/}
+            tar zxvf $file_nm
             Verify_Result
-            LogMsg "Untar MLX driver tar ball file"
+            LogMsg "Untar MLX driver tar ball file, $file_nm"
 
             LogMsg "Installing MLX OFED driver"
-            ./MLNX_OFED_LINUX-4.5-1.0.1.0-rhel7.5-x86_64/mlnxofedinstall --add-kernel-support
+            ./${file_nm%.*}/mlnxofedinstall --add-kernel-support
             Verify_Result
             LogMsg "Installed MLX OFED driver with kernel support modules"
 
@@ -123,7 +125,7 @@ function Main() {
             # install required packages
             LogMsg "This is SUSE"
             LogMsg "Installing required packages ..."
-            install_package "expect glibc-32bit glibc-devel libgcc_s1 libgcc_s1-32bit make gcc gcc-c++ gcc-fortran rdma-core libibverbs-devel librdmacm1 libibverbs-utils bison flex"
+            install_package "expect glibc-32bit glibc-devel libgcc_s1 libgcc_s1-32bit make gcc gcc-c++ gcc-fortran rdma-core libibverbs-devel librdmacm1 libibverbs-utils bison flex zip"
             # force install package that is known to have broken dependencies
             zypper --non-interactive in libibmad-devel
             # Enable mlx5_ib module on boot
@@ -132,11 +134,22 @@ function Main() {
             echo "* soft memlock unlimited" >> /etc/security/limits.conf
             echo "* hard memlock unlimited" >> /etc/security/limits.conf
             ;;
-        *)
-            LogErr "Distro '$DISTRO' not supported or not implemented"
-            SetTestStateFailed
-            exit 0
-            ;;
+		ubuntu*)
+			LogMsg "This is Ubuntu"
+			# IBM Platform MPI & Intel MPI do not seem to work. Under investigation.
+			if [[ $mpi_type == "ibm" || $mpi_type == "intel" ]]; then
+				LogErr "Distro '$DISTRO' not supported or not implemented"
+				SetTestStateFailed
+				exit 0
+			fi
+			LogMsg "Installing required packages ..."
+			install_package "gcc build-essential python-setuptools libibverbs-dev bison flex ibverbs-utils zip"
+			;;
+		*)
+			LogErr "MPI type $mpi_type does not support on '$DISTRO' or not implement"
+			SetTestStateFailed
+			exit 0
+			;;
     esac
 
     LogMsg "Proceeding to MPI installation"
@@ -144,16 +157,14 @@ function Main() {
     # install MPI packages
     if [ $mpi_type == "ibm" ]; then
         LogMsg  "IBM Platform MPI installation running ..."
-        srcblob=https://partnerpipelineshare.blob.core.windows.net/mpi/platform_mpi-09.01.04.03r-ce.bin
-
         # IBM platform MPI installation
         cd ~
-        LogMsg "Downloading bin file"
-        wget $srcblob
+        LogMsg "Downloading bin file, $ibm_platform_mpi"
+		wget $ibm_platform_mpi
         Verify_Result
         LogMsg  "Downloaded IBM Platform MPI bin file"
         LogMsg "$(ls)"
-        chmod +x $HOMEDIR/$(echo $srcblob | cut -d'/' -f5)
+        chmod +x $HOMEDIR/$(echo $ibm_platform_mpi | cut -d'/' -f5)
         Verify_Result
         LogMsg "Added the execution mode to BIN file"
 
@@ -171,7 +182,7 @@ function Main() {
         LogMsg "$(cat $keystroke_filename)"
 
         LogMsg "Executing silent installation"
-        cat ibm_keystroke | $HOMEDIR/$(echo $srcblob | cut -d'/' -f5)
+        cat ibm_keystroke | $HOMEDIR/$(echo $ibm_platform_mpi | cut -d'/' -f5)
         Verify_Result
         LogMsg "Completed IBM Platform MPI installation"
 
@@ -227,13 +238,11 @@ function Main() {
             # none HPC image case, need to install Intel MPI
             # Intel MPI installation of tarball file
             LogMsg "Intel MPI installation running ..."
-            srcblob=https://partnerpipelineshare.blob.core.windows.net/mpi/l_mpi_2018.3.222.tgz
-
-            LogMsg "Downloading Intel MPI source code"
-            wget $srcblob
-
-            tar xvzf $(echo $srcblob | cut -d'/' -f5)
-            cd $(echo "${srcblob%.*}" | cut -d'/' -f5)
+			LogMsg "Downloading Intel MPI source code, $intel_mpi"
+			wget $intel_mpi
+			
+			tar xvzf $(echo $intel_mpi | cut -d'/' -f5)
+			cd $(echo "${intel_mpi%.*}" | cut -d'/' -f5)
 
             LogMsg "Executing silent installation"
             sed -i -e 's/ACCEPT_EULA=decline/ACCEPT_EULA=accept/g' silent.cfg 
@@ -258,14 +267,12 @@ function Main() {
     elif [ $mpi_type == "open" ]; then 
         # Open MPI installation
         LogMsg "Open MPI installation running ..."
-        srcblob=https://partnerpipelineshare.blob.core.windows.net/mpi/openmpi-3.1.2.tar.gz
-
-        LogMsg "Downloading the target openmpi source code"
-        wget $srcblob
+		LogMsg "Downloading the target openmpi source code, $open_mpi"
+		wget $open_mpi
         Verify_Result
 
-        tar xvzf $(echo $srcblob | cut -d'/' -f5)
-        cd $(echo "${srcblob%.*}" | cut -d'/' -f5 | sed -n '/\.tar$/s///p')
+        tar xvzf $(echo $open_mpi | cut -d'/' -f5)
+		cd $(echo "${open_mpi%.*}" | cut -d'/' -f5 | sed -n '/\.tar$/s///p')
 
         LogMsg "Running configuration"
         ./configure --enable-mpirun-prefix-by-default
@@ -295,20 +302,21 @@ function Main() {
     else
         # MVAPICH MPI installation
         LogMsg "MVAPICH MPI installation running ..."
-        srcblob=https://partnerpipelineshare.blob.core.windows.net/mpi/mvapich2-2.3.tar.gz
-
-        LogMsg "Downloading the target MVAPICH source code"
-        wget $srcblob
+        LogMsg "Downloading the target MVAPICH source code, $mvapich_mpi"
+		wget $mvapich_mpi
         Verify_Result
 
-        tar xvzf $(echo $srcblob | cut -d'/' -f5)
-        cd $(echo "${srcblob%.*}" | cut -d'/' -f5 | sed -n '/\.tar$/s///p')
+        tar xvzf $(echo $mvapich_mpi | cut -d'/' -f5)
+		cd $(echo "${mvapich_mpi%.*}" | cut -d'/' -f5 | sed -n '/\.tar$/s///p')
 
         LogMsg "Running configuration"
-        ./configure
+        if [[ $DISTRO == "ubuntu"* ]]; then
+			./configure --disable-fortran --disable-mcast
+		else
+			./configure
+		fi
         Verify_Result
 
-        # Change YACC = yacc to YACC to bison -y
         LogMsg "Compiling MVAPICH MPI"
         make -j $(nproc)
         Verify_Result
@@ -333,7 +341,7 @@ function Main() {
     cd ~
 
     LogMsg "Download WALA agent repo and checkout tag 2.2.35"
-    git clone --branch v2.2.35 https://github.com/Azure/WALinuxAgent
+    git clone --branch v2.2.35 $walaagent_repo
     Verify_Result
 
     cd WALinuxAgent
@@ -351,14 +359,18 @@ function Main() {
     Verify_Result
 
     LogMsg "Restart waagent service"
-    service waagent restart
+    if [[ $DISTRO == "ubuntu"* ]]; then
+		service walinuxagent restart
+	else
+		service waagent restart
+	fi
     Verify_Result
     cd ~
     LogMsg "Proceeding Intel MPI Benchmark test installation"
 
     # install Intel MPI benchmark package
-    LogMsg "Cloning mpi-benchmarks repo"
-    git clone https://github.com/intel/mpi-benchmarks
+    LogMsg "Cloning mpi-benchmarks repo, $intel_mpi_benchmark"
+	git clone $intel_mpi_benchmark
     Verify_Result
     LogMsg "Cloned Intel MPI Benchmark gitHub repo"
     cd mpi-benchmarks/src_c
