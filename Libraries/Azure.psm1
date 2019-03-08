@@ -1589,7 +1589,7 @@ Function Generate-AzureDeployJSONFile ($RGName, $ImageName, $osVHD, $RGXMLData, 
         Add-Content -Value "$($indents[4])}," -Path $jsonFile
         #endregion
 
-        if ($hasWALA -eq "" -or $hasWALA -eq 'Yes') {
+        if ([string]::IsNullOrEmpty($hasWALA) -or $hasWALA -eq 'Yes') {
             #region OSProfile
             Add-Content -Value "$($indents[4])^osProfile^: " -Path $jsonFile
             Add-Content -Value "$($indents[4]){" -Path $jsonFile
@@ -1660,7 +1660,7 @@ Function Generate-AzureDeployJSONFile ($RGName, $ImageName, $osVHD, $RGXMLData, 
             }
             else {
                 Write-LogInfo ">>> Using VHD : $osVHD"
-                if ($hasWALA -ne "" -and $hasWALA -eq 'No') {
+                if (![string]::IsNullOrEmpty($hasWALA) -and $hasWALA -eq 'No') {
                     $vhduri = "https://$StorageAccountName.blob.core.windows.net/vhds/$OsVHD"
                     $sourceContainer = $vhduri.Split("/")[$vhduri.Split("/").Count - 2]
                     $destVHDName = "$vmName-$RGrandomWord-osdisk.vhd"
