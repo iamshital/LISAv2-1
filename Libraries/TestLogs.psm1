@@ -198,7 +198,7 @@ Function Get-SystemBasicLogs($AllVMData, $User, $Password, $currentTestData, $Cu
 		}
 		#endregion
 		if ($enableTelemetry) {
-			$SQLQuery = Get-SQLQueryOfTelemetryData -TestPlatform $global:TestPlatform -TestLocation $global:TestLocation -TestCategory $CurrentTestData.Category `
+			$SQLQuery = Get-SQLQueryOfTelemetryData -TestPlatform $global:TestPlatform -VMGeneration $global:VMGeneration -TestLocation $global:TestLocation -TestCategory $CurrentTestData.Category `
 			-TestArea $CurrentTestData.Area -TestName $CurrentTestData.TestName -CurrentTestResult $CurrentTestResult `
 			-ExecutionTag $global:GlobalConfig.$TestPlatform.ResultsDatabase.testTag -GuestDistro $GuestDistro -KernelVersion $KernelVersion `
 			-LISVersion $LISVersion -HostVersion $HostVersion -VMSize $VMSize -Networking $Networking `
