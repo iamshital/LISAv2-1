@@ -169,16 +169,16 @@ Function Get-SystemBasicLogs($AllVMData, $User, $Password, $currentTestData, $Cu
 		{
 			$LISVersion = "NA"
 		}
-		#region Host Version checking and skip it for OL platform.
-		if (!$TestPlatform.StartsWith('OL')) {
-			$FoundLineNumber = (Select-String -Path "$LogDir\$($vmData.RoleName)-dmesg.txt" -Pattern "Hyper-V Host Build").LineNumber
+		#region Host Version checking
+		$FoundLineNumber = (Select-String -Path "$LogDir\$($vmData.RoleName)-dmesg.txt" -Pattern "Hyper-V Host Build").LineNumber
+		if (![string]::IsNullOrEmpty($FoundLineNumber)) {
 			$ActualLineNumber = $FoundLineNumber[-1] - 1
 			$FinalLine = [string]((Get-Content -Path "$LogDir\$($vmData.RoleName)-dmesg.txt")[$ActualLineNumber])
 			$FinalLine = $FinalLine.Replace('; Vmbus version:4.0','')
 			$FinalLine = $FinalLine.Replace('; Vmbus version:3.0','')
 			$HostVersion = ($FinalLine.Split(":")[$FinalLine.Split(":").Count -1 ]).Trim().TrimEnd(";")
-		#endregion
 		}
+		#endregion
 
 		if ($currentTestData.AdditionalHWConfig.Networking -imatch "SRIOV")
 		{

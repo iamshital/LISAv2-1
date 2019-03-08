@@ -144,12 +144,7 @@ function Start-LISAv2 {
 			}
 			if ($testPlatform) {
 				if ($supportedPlatforms.contains($testPlatform)) {
-					if ($testPlatform.StartsWith('OL')) {
-						$testController = New-Object -TypeName "OLController" -ArgumentList $testPlatform
-					}
-					else {
-						$testController = New-Object -TypeName $testPlatform"Controller"
-					}
+					$testController = New-Object -TypeName $testPlatform"Controller"
 				} else {
 					throw "$testPlatform is not yet supported."
 				}
