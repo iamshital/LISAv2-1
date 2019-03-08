@@ -3,7 +3,6 @@
 
 using Module "TestControllers\AzureController.psm1"
 using Module "TestControllers\HyperVController.psm1"
-using Module "TestControllers\OLController.psm1"
 using Module "TestControllers\WSLController.psm1"
 
 $here = Split-Path -Parent $MyInvocation.MyCommand.Path
